@@ -6,14 +6,16 @@ var ErrInsufficientPower = errors.New("weapon power overwhelms PowerCore's suppl
 var ErrNoPower = errors.New("no power whatsoever")
 
 type Spaceship interface {
-	SetWeapons(weapon string, power int) Weaponry
-	SetEngine(engine string)	string
-	SetPowerCore(powerLevel int, coreName string) PowerCore
-	SetArmor(durability int, armorName string) Armor
+	SetWeapons(weapon string, power int) Spaceship
+	SetEngine(engine string)	Spaceship
+	SetPowerCore(powerLevel int, coreName string) Spaceship
+	SetArmor(durability int, armorName string) Spaceship
+	Build() (*Ship, error)
 }
 
 type ShieldedSpaceship interface {
-	SetShield(shield string, cap int) Shield
+	Spaceship
+	SetShield(shield string, cap int) Spaceship
 }
 
 type Shield struct {
@@ -34,6 +36,14 @@ type Weaponry struct {
 type Armor struct {
 	Durability int
 	Name string
+}
+
+type Ship struct {
+	Weapons   []Weaponry
+	Engine    string
+	PowerCore PowerCore
+	Armor     Armor
+	Shield    *Shield
 }
 
 func ValidateWeaponPower(weapon []Weaponry, core PowerCore) error {
